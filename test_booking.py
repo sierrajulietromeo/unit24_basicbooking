@@ -7,7 +7,7 @@ def main():
     print("Please select from the following options")
     print("1: View room bookings for Tuesday")
     print("2: View room bookings for Wednesday")
-    
+
 
     mainMenuSelection = int(input("Enter selection: "))
 
@@ -57,7 +57,7 @@ def viewWedRoomBookings():
         print("3")
     else:
         main()
-        
+
 def displayRoomBookings(roomName):
     df = pd.read_csv(roomName)
     print(roomName +" BOOKINGS")
@@ -73,14 +73,31 @@ def displayRoomBookings(roomName):
 
 
 def bookRoom(roomName):
+    df = pd.read_csv(roomName)
     bookPeriod = int(input("Which period?"))
+    bookPeriod -= 1 #to get the right place in the array because counting starts at 0
+    print(df.at[bookPeriod, "Name"])
+
+    if (df.at[bookPeriod, "Name"] != "FREE"):
+        print("Sorry, this slot is already booked.")
+        print("                                  ")
+        main()
+    else:
+        name = input("Enter name to book room under.")
+        df.at[bookPeriod, "Name"] = name
+        df.to_csv("sputnik_tues.csv", index=False)
+        print("Room is now booked for you.")
+        print("                           ")
+
+
+
     #Loopthroughheretoseeifitsfree
     main()
 
 
 
-        
-    
+
+
 def editRoomBooking():
     #df.at[1, "Name"] = "John"
     df.to_csv("sputnik_tues.csv", index=False)
