@@ -41,10 +41,11 @@ def viewTueRoomBookings():
 def viewWedRoomBookings():
     print("VIEW WEDNESDAY ROOM BOOKINGS")
     print("=================================")
-    print("Please select from the following rooms")
+    print("Please select from the following rooms:")
     print("1: SPUTNIK")
     print("2: ENDEAVOUR")
     print("3: VOYAGER")
+    print("4: Back to main menu.")
 
     viewWedSelection = int(input("Enter selection: "))
 
@@ -79,14 +80,14 @@ def bookRoom(roomName):
     print(df.at[bookPeriod, "Name"])
 
     if (df.at[bookPeriod, "Name"] != "FREE"):
-        print("Sorry, this slot is already booked.")
+        print("Sorry, this room is already booked for that period.")
         print("                                  ")
         main()
     else:
-        name = input("Enter name to book room under.")
+        name = input("Enter name to book room under: ")
         df.at[bookPeriod, "Name"] = name
         df.to_csv("sputnik_tues.csv", index=False)
-        print("Room is now booked for you.")
+        print("Room is now booked for you at period: ", bookPeriod)
         print("                           ")
 
 
