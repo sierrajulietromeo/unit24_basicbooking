@@ -87,6 +87,7 @@ def bookRoom(roomName):
         name = input("Enter name to book room under: ")
         df.at[bookPeriod, "Name"] = name
         df.to_csv("sputnik_tues.csv", index=False)
+        bookPeriod += 1 #to get the right place in the array because counting starts at 0
         print("Room is now booked for you at period: ", bookPeriod)
         print("                           ")
 
