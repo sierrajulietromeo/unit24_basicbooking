@@ -8,6 +8,7 @@ def main():
     print("Please select from the following options")
     print("1: View room bookings for Tuesday")
     print("2: View room bookings for Wednesday")
+    print("3: View all free rooms")
 
 
     mainMenuSelection = int(input("Enter selection: "))
@@ -18,11 +19,13 @@ def main():
     elif(mainMenuSelection == 2):
         selectedDay = "Wednesday"
         viewRoomBookings(selectedDay)
+    elif(mainMenuSelection == 3):
+        viewFreeRooms()
     else:
         main()
 
 
-    viewRoomBookings(selectedDay)
+
 
 
 def viewRoomBookings(selectedDay):
@@ -47,41 +50,40 @@ def viewRoomBookings(selectedDay):
 
 def displayRoomBookings(roomName,selectedDay):
     df = pd.read_csv("room_bookings.csv")
-    #df.set_index("Period")
-    if(selectedDay == "Tuesday"):
-        firstRow = 0
-        lastRow = 7
-    elif(selectedDay == "Wednesday"):
-        firstRow = 7
-        lastRow = 15
-    else:
-        main()
-
 
     print(selectedDay +" Bookings")
 
-    #print (df(index=False))
-    print(df.set_index("Period")[firstRow:lastRow] ) #prints periods for the day (is df head the best to use?)
-    #print(df.set_index("Period").head(7) ) #prints periods for the day (is df head the best to use?)
+    #dayDataFrame = df[(df.Room == roomName) & (df.Day == selectedDay)]
+
+
+    df.set_index("Period", inplace=True)
+
+    #dayDataFrame.set_index("Period")
+    #print (dayDataFrame)
+    print(df[(df.Room == roomName) & (df.Day == selectedDay)])
+    #print(df[(df.Room == roomName) & (df.Day == selectedDay)] )
     print("Enter the period number you wish to book, or enter any other character to go back.")
 
     try:
         periodNumber = int(input("?"))
-        #os.system("cls")  #Only works on Windows machines
+
     except ValueError:
-        os.system("cls")  #Only works on Windows machines
+
+        #os.system("cls")  #Only works on Windows machines
         main()
 
-    if(periodNumber == 1 or 2 or 3 or 4 or 5 or 6 or 7):
-        bookRoom(roomName, periodNumber, selectedDay)
-    else:
-        os.system("cls")  #Only works on Windows machines
-        main()
+    try:
+        if(periodNumber == 1 or 2 or 3 or 4 or 5 or 6 or 7):
+            bookRoom(roomName, periodNumber, selectedDay)
+        else:
+            os.system("cls")  #Only works on Windows machines
+            main()
 
+    except KeyError:
+        main()
 
 def bookRoom(roomName, periodNumber, selectedDay):
     df = pd.read_csv("room_bookings.csv")
-
     if(roomName == "Sputnik" and selectedDay == "Wednesday"):
         periodNumber += 7
     else:
@@ -90,6 +92,10 @@ def bookRoom(roomName, periodNumber, selectedDay):
 
     periodNumber -= 1 #to get the right place in the array because counting starts at 0
 
+
+
+    # print(df.loc[[1]])
+    #if(df.loc[periodNumber] != "FREE"):   #Trying to work out a more elegant solution for selecting.
     if (df.at[periodNumber, "Name"] != "FREE"):
         os.system("cls")  #Only works on Windows machines
         print ('\a')
@@ -117,7 +123,12 @@ def bookRoom(roomName, periodNumber, selectedDay):
     main()
 
 
-
+def viewFreeRooms():
+    print("FREE ROOMS")
+    df = pd.read_csv("room_bookings.csv")
+    df.set_index("Period", inplace=True)
+    print(df[df.Name == "FREE"] )
+    main()
 
 
 def editRoomBooking():
