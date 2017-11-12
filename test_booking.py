@@ -1,4 +1,5 @@
 import pandas as pd #For read/write to the file.
+import os
 
 #main program menu
 def main():
@@ -12,8 +13,11 @@ def main():
     mainMenuSelection = int(input("Enter selection: "))
 
     if(mainMenuSelection == 1):
+
+        os.system("cls")  #Only works on Windows machines
         viewTueRoomBookings()
     if(mainMenuSelection == 2):
+        os.system("cls")  #Only works on Windows machines
         viewWedRoomBookings()
     else:
         main()
@@ -30,6 +34,7 @@ def viewTueRoomBookings():
 
     if(viewTueSelection == 1):
         print("1")
+        os.system("cls")  #Only works on Windows machines
         displayRoomBookings("sputnik_tues.csv")
     elif(viewTueSelection == 2):
         print("2")
@@ -62,33 +67,40 @@ def viewWedRoomBookings():
 def displayRoomBookings(roomName):
     df = pd.read_csv(roomName)
     print(roomName +" BOOKINGS")
-    print(df.head(7)) #prints periods for the day (is df head the best to use?)
-    print("Press 1 to make a booking for this room on this day, or press any other key for main menu.")
-    bookRoomYesNo = int(input("?"))
 
-    if(bookRoomYesNo == 1):
-        print("Y")
-        bookRoom(roomName)
+    #print (df(index=False))
+    print(df.head(7) ) #prints periods for the day (is df head the best to use?)
+    print("Enter the period number you wish to book, or enter N to go back.")
+
+    try:
+        periodNumber = int(input("?"))
+    except ValueError:
+        os.system("cls")  #Only works on Windows machines
+        main()
+
+    if(periodNumber == 1 or 2 or 3 or 4 or 5 or 6 or 7):
+        bookRoom(roomName, periodNumber)
     else:
+        os.system("cls")  #Only works on Windows machines
         main()
 
 
-def bookRoom(roomName):
+def bookRoom(roomName, periodNumber):
     df = pd.read_csv(roomName)
-    bookPeriod = int(input("Which period?"))
-    bookPeriod -= 1 #to get the right place in the array because counting starts at 0
-    print(df.at[bookPeriod, "Name"])
+    periodNumber -= 1 #to get the right place in the array because counting starts at 0
 
-    if (df.at[bookPeriod, "Name"] != "FREE"):
-        print("Sorry, this room is already booked for that period.")
+    if (df.at[periodNumber, "Name"] != "FREE"):
+        os.system("cls")  #Only works on Windows machines
+        print("Sorry, this room is already booked for that period by:", (df.at[periodNumber, "Name"])  )
         print("                                  ")
-        main()
+        displayRoomBookings(roomName)
     else:
         name = input("Enter name to book room under: ")
-        df.at[bookPeriod, "Name"] = name
+        df.at[periodNumber, "Name"] = name
         df.to_csv("sputnik_tues.csv", index=False)
-        bookPeriod += 1 #to get the right place in the array because counting starts at 0
-        print("Room is now booked for you at period: ", bookPeriod)
+        periodNumber += 1 #to get the right place in the array because counting starts at 0
+        os.system("cls")  #Only works on Windows machines
+        print("Room is now booked for you at period: ", periodNumber)
         print("                           ")
 
 
