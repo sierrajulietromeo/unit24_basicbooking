@@ -10,9 +10,16 @@ def main():
     print("2: View room bookings for Wednesday")
     print("3: View all free rooms")
 
+    try:
 
-    mainMenuSelection = int(input("Enter selection: "))
-    os.system("cls")  #Only works on Windows machines
+        mainMenuSelection = int(input("Enter selection: "))
+        os.system("cls")  #Only works on Windows machines
+
+    except ValueError:
+        os.system("cls")  #Only works on Windows machines
+        main()
+
+
     if(mainMenuSelection == 1):
         selectedDay = "Tuesday"
         viewRoomBookings(selectedDay)
